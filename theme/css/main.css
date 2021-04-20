@@ -42,6 +42,11 @@ div .align-center {
     text-align: center;
 }
 
+.caption {
+    margin-block-start: 0.5em;
+    font-style: italic;
+}
+
 #site-name {
     color: #4e7495;
     margin-right: 0.5rem;
