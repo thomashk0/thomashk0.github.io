@@ -72,3 +72,8 @@ footer#site-footer {
     text-align: right;
 }
 
+/* Code-blocks */
+.highlight {
+    background: #f7f7f7;
+    padding: 0.3rem;
+}

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <title>Survival Kit for C Programmers (Macros)</title>
+        <link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+<link rel="stylesheet" href="/theme/css/syntax.css" type="text/css" />    </head>
+
+    <header id="site-header">
+        <nav id="side-nav">
+            <div id="site-header" class="container">
+                <span id="site-name">Thomashk0.Blog</span>
+                <div class="links">
+                    / <a href="/index.html">Home</a> /
+                    <a href="/pages/about.html">About</a> /
+                    <a href="/pages/contact.html">Contact</a> /
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <body>
+        <div class="container">
+<div class="row">
+     <div class="col-md-8">
+           <h1>Survival Kit for C Programmers (Macros)</h1>
+             <label>Posted on <strong>2022/11/24</strong></label>
+               <p>I realized that in my C projects I always need the same macros over and over.
+I thought it would be interesting to centralize them somewhere and document them.</p>
+<p>The macros presented here should work with any recent GCC or LLVM compiler.
+I do not guarantee they will work on all compiler/architectures.</p>
+<p>If you want to go further, I highly recommend you to take a look at the <a class="reference external" href="https://nemequ.github.io/hedley/">Hedley project</a>.
+Hedley provides a huge amount of features and is platform generic.</p>
+<p>The code for this post (with some additional examples) is available <a class="reference external" href="https://github.com/thomashk0/c-snippets/blob/main/survival/survival.h">here</a>.</p>
+<div class="section" id="sizeof-arrays">
+<h2>Sizeof Arrays</h2>
+<p>One lacking feature in C is the ability to retrieve the size of fixed-size arrays.
+The glorious <tt class="docutils literal">sizeof</tt> operator, returns the full length in bytes of the target object.
+The <tt class="docutils literal">COUNT_OF</tt> macro shown below solves this issue.</p>
+<div class="highlight"><pre><span></span><span class="c1">/// Retrieve the number of items in a array.</span>
+<span class="cp">#define COUNT_OF(x) (sizeof(x) / sizeof(x[0]))</span>
+</pre></div>
+<p>You can use it as follows:</p>
+<div class="highlight"><pre><span></span><span class="kt">double</span><span class="w"> </span><span class="n">local_array</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">};</span><span class="w"></span>
+
+<span class="n">assert</span><span class="p">(</span><span class="n">COUNT_OF</span><span class="p">(</span><span class="n">local_array</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span><span class="w"></span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">COUNT_OF</span><span class="p">(</span><span class="n">local_array</span><span class="p">);</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="c1">// do some stuff.</span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+<p>If compatibility with C++ is needed, I suggest you pick a safer version of this macro (see this <a class="reference external" href="https://stackoverflow.com/a/4415646">stack overflow post</a>).</p>
+</div>
+<div class="section" id="basic-type-generic-operations">
+<h2>Basic Type Generic Operations</h2>
+<p><tt class="docutils literal">MIN</tt>, <tt class="docutils literal">MAX</tt> emulates a type generic min and max operations between two variables.</p>
+<div class="highlight"><pre><span></span><span class="cp">#define MIN(a, b) ((a) &gt; (b)) ? (b) : (a)</span>
+<span class="cp">#define MAX(a, b) ((a) &lt; (b)) ? (b) : (a)</span>
+</pre></div>
+<p>Another useful one is <tt class="docutils literal">ABS</tt>, which emulates a type generic absolute value.</p>
+<div class="highlight"><pre><span></span><span class="cp">#define ABS(x) (((x) &lt; 0) ? -(x) : (x))</span>
+</pre></div>
+<p>Another function that appears quite frequently in my code bases is a check for
+a power of two. It can be implemented with some bit tricks.</p>
+<div class="highlight"><pre><span></span><span class="cp">#define is_power_of_two(x) ((x) &amp;&amp; !((x) &amp; ((x)-1)))</span>
+</pre></div>
+</div>
+<div class="section" id="compiler-hints">
+<h2>Compiler Hints</h2>
+<p>There are countless compiler-specific macros that allow to give optimization
+hints. I only include the ones I use in almost every project.</p>
+<p>The most useful ones are <tt class="docutils literal">LIKELY</tt> and <tt class="docutils literal">UNLIKELY</tt>, used to indicate the
+compiler the expected outcome of a boolean expression.</p>
+<div class="highlight"><pre><span></span><span class="cp">#define LIKELY(x) __builtin_expect((x), 1)</span>
+
+<span class="cp">#define UNLIKELY(x) __builtin_expect((x), 0)</span>
+</pre></div>
+<p>I am not entirely sure that the compiler will always consider those
+annotations. I generally use them in two situations.</p>
+<p>The first situation is in performance critical code, where I want to suggest
+&quot;really hard&quot; to the compiler what is the hot path in our program. It is worth
+mentioning that a better approach for large codebases may be to use <cite>profile guided optimizations &lt;https://en.wikipedia.org/wiki/Profile-guided_optimization&gt;</cite>.</p>
+<p>The second situation, is when I am doing error checks. I find those annotations
+conveniently document the unlikely nature of failures.</p>
+<div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">foo_can_fail</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">UNLIKELY</span><span class="p">(</span><span class="n">bar_acuda</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">UNLIKELY</span><span class="p">(</span><span class="n">bar_tabac</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">-2</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+<p>Another macro I use very often is <tt class="docutils literal">ALIGNED</tt>, mostly to align &quot;important&quot; data
+on cache line boundaries.</p>
+<div class="highlight"><pre><span></span><span class="cp">#define ALIGNED(x) __attribute__((aligned(x)))</span>
+</pre></div>
+<p>You can use it as follows:</p>
+<div class="highlight"><pre><span></span><span class="c1">// In variable declaration.</span>
+<span class="k">static</span><span class="w"> </span><span class="n">ALIGNED</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">array</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span><span class="w"></span>
+
+<span class="c1">// In structure definition.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">coords</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">     </span><span class="kt">double</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w"></span>
+<span class="w">     </span><span class="kt">double</span><span class="w"> </span><span class="n">y</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"> </span><span class="n">ALIGNED</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+<p>Another powerful macro is <tt class="docutils literal">ASSUME</tt>, we give it predicate that the
+compiler can exploit in its optimizations phases.</p>
+<div class="highlight"><pre><span></span><span class="cp">#define ASSUME(cond)                  \</span>
+<span class="cp">    do {                              \</span>
+<span class="cp">        if (!(cond))                  \</span>
+<span class="cp">            __builtin_unreachable();  \</span>
+<span class="cp">    } while (0)</span>
+</pre></div>
+<p>I typically use this macro to specify constraints on array sizes, to make loop
+optimizations (unrolling, auto-vectorization) more aggressive. For example:</p>
+<div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">add_vec</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">data_len</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">ASSUME</span><span class="p">(</span><span class="n">data_len</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">16</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">ASSUME</span><span class="p">((</span><span class="n">data_len</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">data_len</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+<p>Here is a side-by-side comparison of the assembly code (<tt class="docutils literal">gcc <span class="pre">-O3</span></tt>) with and
+without the <tt class="docutils literal">ASSUME</tt> annotation. It is pretty clear that the <tt class="docutils literal">ASSUME</tt> macro
+allowed to drastically simplify the loop.</p>
+<object data="/static/img/c_macro_assume_example.svg" style="width: 100%;" type="image/svg+xml">Assembly code with and without the ASSUME macro.</object>
+<p>But be careful with <tt class="docutils literal">ASSUME</tt>, it is very easy to shoot yourself in the foot
+with this macro!  If the assumption given to the compiler is not true, bad
+things will happen.</p>
+</div>
+<div class="section" id="minimalistic-logging">
+<h2>Minimalistic Logging</h2>
+<p>This topic will be covered in greater details in another post.</p>
+<p>I like to have really simple <tt class="docutils literal">printf</tt>-based tracing in my applications
+(usually enable only in debug builds).</p>
+<p>Basically, I write a simple wrapper around <tt class="docutils literal">fprintf</tt> with the following prototype:</p>
+<div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"></span>
+<span class="nf">survival_log</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">level</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">file</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">func</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">line</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">fmt</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="p">...)</span><span class="w"> </span><span class="n">__attribute__</span><span class="p">((</span><span class="n">format</span><span class="p">(</span><span class="n">printf</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">)));</span><span class="w"></span>
+</pre></div>
+<p>A minimal implementation of this function will look something like this:</p>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdarg.h&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span><span class="w"></span>
+<span class="nf">survival_log</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">level</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">file</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">func</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">line</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">fmt</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="p">...)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="kt">va_list</span><span class="w"> </span><span class="n">arglist</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="n">fprintf</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="n">stderr</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;[%ld](%s:%ld in %s) &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">level</span><span class="p">,</span><span class="w"> </span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="n">line</span><span class="p">,</span><span class="w"> </span><span class="n">func</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">va_start</span><span class="p">(</span><span class="n">arglist</span><span class="p">,</span><span class="w"> </span><span class="n">fmt</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">vfprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span><span class="w"> </span><span class="n">fmt</span><span class="p">,</span><span class="w"> </span><span class="n">arglist</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">va_end</span><span class="p">(</span><span class="n">arglist</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+<p>The code may look complex because of variadic arguments, but it is not.  What
+it does is: first call <tt class="docutils literal">fprintf</tt> to print a prefix (log level, file, line)
+and then forwards the remaining arguments to <tt class="docutils literal">vfprintf</tt>.</p>
+<p>Having this <tt class="docutils literal">survival_log</tt> implemented, I define macros that behave as a
+regular <tt class="docutils literal">printf</tt>. Under the hoods, they just forward their arguments to
+<tt class="docutils literal">survival_log</tt>.</p>
+<ul class="simple">
+<li><tt class="docutils literal">DPRINTF</tt> for debug messages.</li>
+<li><tt class="docutils literal">WPRINTF</tt> for warning messages.</li>
+<li><tt class="docutils literal">EPRINTF</tt> for error messages.</li>
+</ul>
+<p>For example <tt class="docutils literal">DPRINTF</tt> can be defined as:</p>
+<div class="highlight"><pre><span></span><span class="cp">#define DPRINTF(...)                                                         \</span>
+<span class="cp">    do {                                                                     \</span>
+<span class="cp">        survival_log(                                                        \</span>
+<span class="cp">            SURVIVAL_LOG_DEBUG, __FILE__, __func__, __LINE__, __VA_ARGS__);  \</span>
+<span class="cp">    } while (0)</span>
+</pre></div>
+<p>You can use those macros as a regular <tt class="docutils literal">printf</tt>. For example:</p>
+<div class="highlight"><pre><span></span><span class="n">DPRINTF</span><span class="p">(</span><span class="s">&quot;checking LIKELY, UNLIKELY</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">LIKELY</span><span class="p">(</span><span class="n">rnd</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">DPRINTF</span><span class="p">(</span><span class="s">&quot;rand() is &gt; 0, (%d)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rnd</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+<p>Will produce the following output on <tt class="docutils literal">stderr</tt>:</p>
+<div class="highlight"><pre><span></span>[debug](survival_demo.c:90 in main) checking LIKELY, UNLIKELY
+[debug](survival_demo.c:93 in main) rand() is &gt; 0, (1804289383)
+</pre></div>
+<p>This logging system is a very good start for small projects.  Despite its
+simplicity, I find it very effective in practice.  Furthermore, it is very easy
+to extend if needed (e.g., display timestamps, implement filters, log to files,
+...).</p>
+</div>
+<div class="section" id="scoped-variables">
+<h2>Scoped Variables</h2>
+<p>Again, this topic will be covered in greater details in another post.</p>
+<p>When possible I like to use the <tt class="docutils literal">__cleanup__</tt> attribute available in GCC and Clang.
+This extension allows to implement automatic cleanup of variables (some sort of RAII in C).</p>
+<p>Put shortly, if a variable is marked with this attribute:</p>
+<div class="highlight"><pre><span></span><span class="n">__attribute__</span><span class="w"> </span><span class="p">((</span><span class="n">__cleanup__</span><span class="p">(</span><span class="n">int_cleanup</span><span class="p">)))</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+<p>Then, the function <tt class="docutils literal">void int_cleanup(int* ptr)</tt> will be called, when variable
+<tt class="docutils literal">x</tt> goes out of scope.  The address of <tt class="docutils literal">x</tt> is passed to <tt class="docutils literal">int_cleanup</tt> as
+first arguments.</p>
+<p>So with attribute, you can automatically release pointers, close files, etc.</p>
+<p>However, those annotations quickly make code unreadable.
+Thus, the first thing to do is to simplify the attribute annotation:</p>
+<div class="highlight"><pre><span></span><span class="cp">#define SURVIVAL_CLEANUP(func) __attribute__((cleanup(func)))</span>
+</pre></div>
+<p>Basically for each type, I define a <tt class="docutils literal">scoped_[mytype]</tt> macro:</p>
+<div class="highlight"><pre><span></span><span class="cp">#define scoped_int SURVIVAL_CLEANUP(int_cleanup)</span>
+</pre></div>
+<p>Then, I would create scoped variable with this macros:</p>
+<div class="highlight"><pre><span></span><span class="c1">// __attribute__ ((__cleanup__(int_cleanup))) int x = 42;</span>
+<span class="c1">// becomes:</span>
+<span class="n">scoped_int</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+<p>We could also think of a <tt class="docutils literal">scoped_int</tt> macro that would expand to <tt class="docutils literal">__attribute__ <span class="pre">((__cleanup__(int_cleanup)))</span> int</tt>.
+But I like to keep macro expansion straightforward.</p>
+<p>Another annoying aspect of the cleanup extension is in the definition of cleanup handlers.</p>
+<p>Let's say you want to automatically close a file. You would be tempted to declare your file as:</p>
+<div class="highlight"><pre><span></span><span class="n">__attribute__</span><span class="w"> </span><span class="p">((</span><span class="n">__cleanup__</span><span class="p">(</span><span class="n">fclose</span><span class="p">)))</span><span class="w"> </span><span class="kt">FILE</span><span class="o">*</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+<p>However, <tt class="docutils literal">fclose</tt> does not have the correct prototype, because the cleanup
+extension will pass the address of <tt class="docutils literal">f</tt> (a <tt class="docutils literal">FILE**</tt> type). To automatically
+generate wrappers I use the following macro (taken from System-D codebase).</p>
+<div class="highlight"><pre><span></span><span class="cp">#define DEFINE_TRIVIAL_CLEANUP_FUNC(name, type, func)                          \</span>
+<span class="cp">    static void name(type* p)                                                  \</span>
+<span class="cp">    {                                                                          \</span>
+<span class="cp">        if (*p) {                                                              \</span>
+<span class="cp">            func(*p);                                                          \</span>
+<span class="cp">        }                                                                      \</span>
+<span class="cp">    }                                                                          \</span>
+<span class="cp">    struct __useless_struct_to_allow_trailing_semicolon__</span>
+</pre></div>
+<p>With this macro, you can define a scoped file as follows:</p>
+<div class="highlight"><pre><span></span><span class="c1">// Instanciate a trivial cleanup function for FILE* types.</span>
+<span class="n">DEFINE_TRIVIAL_CLEANUP_FUNC</span><span class="p">(</span><span class="w"></span>
+<span class="w">    </span><span class="n">file_cleanup</span><span class="p">,</span><span class="w"> </span><span class="cm">/* Name for the wrapper generated. */</span><span class="w"></span>
+<span class="w">    </span><span class="kt">FILE</span><span class="o">*</span><span class="p">,</span><span class="w">        </span><span class="cm">/* Type passed to the destructor. */</span><span class="w"></span>
+<span class="w">    </span><span class="n">fclose</span><span class="w">        </span><span class="cm">/* Destructor invoked. */</span><span class="w"></span>
+<span class="p">);</span><span class="w"></span>
+
+<span class="c1">// Attribute to declare scoped files.</span>
+<span class="cp">#define scoped_file SURVIVAL_CLEANUP(file_cleanup)</span>
+
+<span class="c1">// Example scoped file:</span>
+<span class="n">scoped_file</span><span class="w"> </span><span class="kt">FILE</span><span class="o">*</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fopen</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion</h2>
+<p>I packed the macro described in this post in a header <a class="reference external" href="https://github.com/thomashk0/c-snippets/blob/main/survival/survival.h">survival.h</a>.
+You can see them in action in a small demo <a class="reference external" href="https://github.com/thomashk0/c-snippets/blob/main/survival/test/survival_demo.c">here</a>.</p>
+<p>I would be interested to hear what are your most useful macros. Feel free to PM
+me or <a class="reference external" href="https://github.com/thomashk0/c-snippets/issues">open an discussion</a>
+on the Github repository.</p>
+</div>
+
+    </div>
+</div>
+        </div>
+    </body>
+    <footer id="site-footer" class="container">
+
+    <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/">
+    ---
+    Made with &lt;3 using <a href="https://docs.getpelican.com/en/latest/index.html">Pelican</a> (<a href="https://github.com/thomashk0/thomashk0.github.io">Source</a>).
+    <a href="http://creativecommons.org/publicdomain/zero/1.0?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC0 1.0<img style="height:14px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img style="height:14px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/zero.svg?ref=chooser-v1"></a>
+    </p>
+    </footer>
+</html>
