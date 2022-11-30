@@ -64,6 +64,12 @@ div .align-center {
     display: inline;
 }
 
+.rss {
+    width: auto;
+    display: inline;
+    align: right;
+}
+
 /* Footer style */
 footer#site-footer {
     color: gray;
