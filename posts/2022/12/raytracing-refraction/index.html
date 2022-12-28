@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <title>Ray Tracing and Refraction</title>
+        <link rel="stylesheet" href="https://thomashk0.github.io/theme/css/main.css" type="text/css" />
+<link rel="stylesheet" href="https://thomashk0.github.io/theme/css/syntax.css" type="text/css" />    </head>
+
+    <header id="site-header">
+        <nav id="side-nav">
+            <div id="site-header" class="container">
+                <span id="site-name">Thomashk0.Blog</span>
+                <div class="links">
+                    / <a href="https://thomashk0.github.io/index.html">Home</a> /
+                    <a href="https://thomashk0.github.io/pages/about.html">About</a> /
+                    <a href="https://thomashk0.github.io/pages/contact.html">Contact</a> /
+                </div>
+                <div class="rss">
+                    <a href="https://thomashk0.github.io/feeds/all.atom.xml">RSS</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <body>
+        <div class="container">
+<div class="row">
+     <div class="col-md-8">
+           <h1>Ray Tracing and Refraction</h1>
+             <label>Posted on <strong>2022/12/28</strong></label>
+               <p>A few weeks ago I was following Peter Shirley’s awesome <a class="reference external" href="https://raytracing.github.io/books/RayTracingInOneWeekend.html">“Ray Tracing in One
+Week End”</a>
+book. Everything went fine until I reached dielectric materials, where I
+started to obtain really weird pictures. From there, I had to fully re-check
+the ray tracer.  This was both painful and beneficial, since it forced me to
+dig into every details of the ray tracer. The formulas for refraction are not
+really explained in the book. So, I decided to write a more detailed
+explanation in this post. Internalizing this proof actually lead me to the bug
+in my code, I hope that can help.</p>
+<p>Here is a small widget that implements the formulas described in this post.</p>
+<div class="demo-form">
+    <table>
+        <tr>
+            <td><label for="ni">ni</label></td>
+            <td><input type="text" id="ni" value="1" /></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><label for="nr">nr</label></td>
+            <td><input type="text" id="nr" value="1.6" /></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><label for="angle">Angle In</label></td>
+            <td><input type="range" id="angle" name="angle" value="40" min="0" max="90" step="0.1" /></td>
+            <td><span id="angle-value">40&#176;</span></td>
+        </tr>
+        <tr>
+            <td>Angle Out</td>
+            <td align="right"><span id="angle-out"></span></td>
+            <td></td>
+        </tr>
+    </table>
+    <div id="svg-canvas" class="svg-container"></div>
+</div><div class="section" id="overview">
+<h2>Overview</h2>
+<p>Refraction describes how a ray behaves when crossing materials. We
+consider the setup depicted on <a class="reference external" href="#fig-refraction">Figure 1</a>,
+where a ray intersects different materials (e.g., from air to water).
+The materials have different refractive indices <span class="math">\(n_{i}\)</span> and
+<span class="math">\(n_{r}\)</span>. Let <span class="math">\(\vec{i}\)</span> be the incident ray, <span class="math">\(\vec{r}\)</span>
+the refracted ray and <span class="math">\(\vec{n}\)</span> the surface normal. The question
+is: how can we express <span class="math">\(\vec{r}\)</span> in function of <span class="math">\(\vec{i}\)</span>
+and <span class="math">\(\vec{n}\)</span> and the refractive indices?</p>
+<div class="figure align-center" id="fig-refraction">
+<img alt="Typical Refraction Setup" src="https://thomashk0.github.io/static/img/raytracer_refraction.png" style="width: 65%;" />
+<p class="caption">Figure 1: Typical Refraction Setup</p>
+</div>
+<p>We make the following assumptions:</p>
+<ul class="simple">
+<li>the normal vector is always oriented against the incident ray,
+formally <span class="math">\(\langle\vec{i},\,\vec{n}\rangle&lt;0\)</span>,</li>
+<li>all vectors are normalized,
+<span class="math">\(\|\vec{i}\|=\|\vec{r}\|=\|\vec{n}\|=1\)</span>.</li>
+</ul>
+<p>The relation between <span class="math">\(\theta_{i}\)</span> and <span class="math">\(\theta_{r}\)</span> is given
+by Snell’s law, which states that:</p>
+<div class="math">
+\begin{equation*}
+n_{i}\sin\theta_{i}=n_{r}\sin\theta_{r}\label{eq:snell_law}
+\end{equation*}
+</div>
+<p>Note that there cannot be refraction in every configuration. For
+refraction to be possible, we need to have:</p>
+<div class="math">
+\begin{equation*}
+\frac{n_{i}}{n_{r}}\sin\theta_{i}&lt;1.
+\end{equation*}
+</div>
+<p>When this condition is not satisfied, the ray is reflected.</p>
+</div>
+<div class="section" id="the-refraction-formula">
+<h2>The Refraction Formula</h2>
+<p>Ok, now lets see how we can compute <span class="math">\(\vec{r}\)</span> from <span class="math">\(\vec{i}\)</span>
+and <span class="math">\(\vec{n}\)</span>. The trick is to decompose <span class="math">\(\vec{r}\)</span> as
+follows:</p>
+<div class="math">
+\begin{equation*}
+\vec{r}=\vec{r_{||}}+\vec{r_{\perp}}
+\end{equation*}
+</div>
+<p>Where is <span class="math">\(\vec{r}_{||}\)</span> is the projection of <span class="math">\(\vec{r}\)</span> on
+<span class="math">\(\vec{n}\)</span> and <span class="math">\(\vec{r_{\perp}}\)</span> the projection on the
+orthogonal of <span class="math">\(\vec{n}\)</span> in the plane generated by <span class="math">\(\vec{i}\)</span>
+and <span class="math">\(\vec{n}\)</span> . This decomposition expands as follows:</p>
+<div class="math">
+\begin{equation*}
+\begin{aligned}
+\vec{r} &amp; = &amp; \underbrace{\langle\vec{r},\,\vec{n}\rangle\vec{n}}_{\vec{r_{||}}}+\underbrace{(\vec{r}-\langle\vec{r},\,\vec{n}\rangle\vec{n})}_{\vec{r_{\perp}}}\label{eq:r_expansion}\end{aligned}
+\end{equation*}
+</div>
+<p>It is easy to check that the right term is indeed orthogonal to
+<span class="math">\(\vec{n}\)</span> (the dot product with <span class="math">\(\vec{n}\)</span> is zero). Another
+way to express <span class="math">\(\vec{r}_{\perp}\)</span> is through a cross product:</p>
+<div class="math">
+\begin{equation*}
+\vec{r}_{\perp}=(\vec{r}-\langle\vec{r},\,\vec{n}\rangle\vec{n})=(\vec{r}\times\vec{n})\times\vec{n}.
+\end{equation*}
+</div>
+<p>We can expand <span class="math">\(\vec{i}\)</span> in the same way we did for
+<span class="math">\(\vec{r}\)</span>.</p>
+<div class="math">
+\begin{equation*}
+\begin{aligned}
+\vec{i} &amp; = &amp; \underbrace{\langle\vec{i},\,\vec{n}\rangle\vec{n}}_{\vec{i_{||}}}+\underbrace{(\vec{i}-\langle\vec{i},\,\vec{n}\rangle\vec{n})}_{\vec{i_{\perp}}}\end{aligned}
+\end{equation*}
+</div>
+<p>And we also have (keep this equality in mind, we will reuse it by the
+end of the proof):</p>
+<div class="math" id="equation1">
+\begin{equation*}
+\vec{i}_{\perp}=(\vec{i}-\langle\vec{i},\,\vec{n}\rangle\vec{n})=(\vec{i}\times\vec{n})\times\vec{n}\label{eq:i_perp}
+\end{equation*}
+</div>
+<p>Now here is the trick I missed when trying to work out this proof:
+<span class="math">\(\vec{r}\)</span> is in the plane generated by <span class="math">\(\vec{i}\)</span> and
+<span class="math">\(\vec{n}\)</span>. In other words, <span class="math">\(\vec{i}\times\vec{n}\)</span> and
+<span class="math">\(\vec{r}\times\vec{n}\)</span> are colinear and as a bonus, they are
+linked by Snell’s law. The cross product of two vector is defined as:</p>
+<div class="math">
+\begin{equation*}
+\vec{i}\times\vec{n}=\|\vec{i}\|\|\vec{n}\|\sin\theta_{i}\vec{k}.
+\end{equation*}
+</div>
+<p>Here, I introduced <span class="math">\(\vec{k}\)</span> which is the orthogonal vector to the
+plane generated by <span class="math">\(\vec{i}\)</span> and <span class="math">\(\vec{n}\)</span>. Similarly, for
+<span class="math">\(\vec{r}\)</span> we have:</p>
+<div class="math">
+\begin{equation*}
+\vec{r}\times\vec{n}=\|\vec{r}\|\|\vec{n}\|\sin\theta_{r}\vec{k}.
+\end{equation*}
+</div>
+<p>If we assume that <span class="math">\(\|\vec{i}\|=\|\vec{r}\|=1\)</span>, we can write:</p>
+<div class="math">
+\begin{equation*}
+\begin{aligned}
+\vec{r}\times\vec{n} &amp; =\sin\theta_{r}\vec{k}\nonumber \\
+ &amp; =\frac{n_{i}}{n_{r}}\sin\theta_{i}\vec{k} &amp; \text{(Using Snell's law)}\nonumber \\
+ &amp; =\frac{n_{i}}{n_{r}}\vec{i}\times\vec{n}.\end{aligned}
+\end{equation*}
+</div>
+<p>Awesome! We are ready to expand <span class="math">\(\vec{r}\)</span>. Lets review the
+decomposition of <span class="math">\(\vec{r}\)</span>:</p>
+<div class="math">
+\begin{equation*}
+\begin{aligned}
+\vec{r} &amp; = &amp; \vec{r}_{||} + \vec{r}_{\perp}\\
+        &amp; = &amp; \langle\vec{r},\,\vec{n}\rangle\vec{n}+(\vec{r}\times\vec{n})\times\vec{n}.\end{aligned}
+\end{equation*}
+</div>
+<p>We can now expand each term. Lets start with the left one,
+<span class="math">\(\vec{r}_{||}\)</span>:</p>
+<div class="math">
+\begin{equation*}
+\begin{aligned}
+\langle\vec{r},\,\vec{n}\rangle\vec{n} &amp; =-\langle-\vec{r},\,\vec{n}\rangle\vec{n}\\
+ &amp; =-\cos\theta_{r}\vec{n}\\
+ &amp; =-\sqrt{1-\sin^{2}\theta_{r}}\vec{n}\\
+ &amp; =-\sqrt{1-\left(\frac{n_{i}}{n_{\theta}}\right)^{2}\sin^{2}\theta_{i}}\vec{n}\\
+ &amp; =-\sqrt{1-\left(\frac{n_{i}}{n_{\theta}}\right)^{2}\left(1-\cos^{2}\theta_{i}\right)}\vec{n}\\
+ &amp; =-\sqrt{1-\left(\frac{n_{i}}{n_{\theta}}\right)^{2}\left(1-\langle-\vec{i},\,\vec{n}\rangle^{2}\right)}\vec{n}\end{aligned}
+\end{equation*}
+</div>
+<p>In the first line, we use the basic trigonometry equation between sines
+and cosines, <span class="math">\(\cos^{2}\theta+\sin^{2}\theta=1\)</span>. In the second
+line, we apply Snell law. In the third line, we apply again some basic
+trigonometry again. The last step uses the fact that
+<span class="math">\(\cos\theta_{i}=\langle-\vec{i},\,\vec{n}\rangle\)</span>. So, we have
+expressed <span class="math">\(\vec{r_{\perp}}\)</span> only from <span class="math">\(\vec{i}\)</span> and
+<span class="math">\(\vec{n}\)</span>.</p>
+<p>Now, it is time to expand <span class="math">\(\vec{r_{\perp}}\)</span>: .</p>
+<div class="math">
+\begin{equation*}
+\begin{aligned}
+(\vec{r}\times\vec{n})\times\vec{n} &amp; =\left(\frac{n_{i}}{n_{r}}\vec{i}\times\vec{n}\right)\times\vec{n}\\
+ &amp; =\frac{n_{i}}{n_{r}}\left(\vec{i}\times\vec{n}\right)\times\vec{n}\\
+ &amp; =\frac{n_{i}}{n_{r}}(\vec{i}-\langle\vec{i},\,\vec{n}\rangle\vec{n})\\
+ &amp; =\frac{n_{i}}{n_{r}}(\vec{i}+\langle-\vec{i},\,\vec{n}\rangle\vec{n})\end{aligned}
+\end{equation*}
+</div>
+<p>On the first line, we rewrite the cross product, thanks to Snell's law. On the second line, we move out
+the scalar constant and on the last line, we use the relation <a class="reference external" href="#equation1">shown previously</a>.</p>
+<p>Lets define <span class="math">\(\mu=\frac{n_{i}}{n_{r}}\)</span>, then <span class="math">\(\vec{r}\)</span> can be
+written as:</p>
+<div class="math">
+\begin{equation*}
+\begin{aligned}
+\vec{r} &amp; =\vec{r_{||}}+\vec{r}_{\perp}\\
+ &amp; =-\sqrt{1-\mu^{2}\left(1-\langle-\vec{i},\,\vec{n}\rangle^{2}\right)}\vec{n}+\mu(\vec{i}+\langle-\vec{i},\,\vec{n}\rangle\vec{n})\\
+ &amp; =\left(\mu\langle-\vec{i},\,\vec{n}\rangle-\sqrt{1-\mu^{2}\left(1-\langle-\vec{i},\,\vec{n}\rangle^{2}\right)}\right)\vec{n}+\mu\vec{i} \end{aligned}
+\end{equation*}
+</div>
+</div>
+<div class="section" id="back-to-the-code">
+<h2>Back to the Code</h2>
+<p>Now, the code shown <a class="reference external" href="https://raytracing.github.io/books/RayTracingInOneWeekend.html#dielectrics/refraction">in the book</a> should make more sense.</p>
+<div class="highlight"><pre><span></span><span class="n">vec3</span><span class="w"> </span><span class="nf">refract</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">vec3</span><span class="o">&amp;</span><span class="w"> </span><span class="n">uv</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">vec3</span><span class="o">&amp;</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">etai_over_etat</span><span class="p">)</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">cos_theta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fmin</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="o">-</span><span class="n">uv</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">),</span><span class="w"> </span><span class="mf">1.0</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">vec3</span><span class="w"> </span><span class="n">r_out_perp</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">etai_over_etat</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">uv</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">cos_theta</span><span class="o">*</span><span class="n">n</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">vec3</span><span class="w"> </span><span class="n">r_out_parallel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">fabs</span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">r_out_perp</span><span class="p">.</span><span class="n">length_squared</span><span class="p">()))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">r_out_perp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">r_out_parallel</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+<p>Well, if you look carefully, the <tt class="docutils literal">r_out_parallel</tt> does not match with the expression of <span class="math">\(\vec{r}_{||}\)</span>.
+The author applied Pythagoras' theorem (assuming the vector returned is a unit vector).</p>
+<div class="math">
+\begin{equation*}
+||\vec{r}||^2 = ||\vec{r}_{||}||^2 + ||\vec{r}_{\perp}||^2
+\end{equation*}
+</div>
+<p>So,</p>
+<div class="math">
+\begin{equation*}
+||\vec{r}_{||}|| = \pm \sqrt{1 -  ||\vec{r}_{\perp}||^2}
+\end{equation*}
+</div>
+<p>Since we know that <span class="math">\(\vec{r}_{||}\)</span> is oriented against <span class="math">\(\vec{n}\)</span>, we can write:</p>
+<div class="math">
+\begin{equation*}
+\vec{r}_{||} = -\sqrt{1 -  ||\vec{r}_{\perp}||^2}\vec{n}
+\end{equation*}
+</div>
+<p>Pfew, while there are no fancy math involved, understanding the final refraction program was much more involved than what I initially though.
+Given the quantity of boring equation, I definitely understand why the author did not include them in its book!</p>
+</div>
+<div class="section" id="useful-references">
+<h2>Useful References</h2>
+<p>Here are some references that helped me debug refraction:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://vertexwahn.de/2020/12/19/refraction/">Ray tracing 101: Refraction of Light</a></li>
+<li><a class="reference external" href="http://psgraphics.blogspot.com/2020/12/debugging-refraction-in-ray-tracer.html">Debugging refraction in a ray tracer</a></li>
+</ul>
+</div>
+<script type='text/javascript'>if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+    </div>
+</div>
+        </div>
+    </body>
+            <script src="https://d3js.org/d3.v7.min.js"></script>
+            <script src="https://thomashk0.github.io/js/refraction_anim.js"></script>
+    <footer id="site-footer" class="container">
+
+    <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/">
+    ---
+    Made with &lt;3 using <a href="https://docs.getpelican.com/en/latest/index.html">Pelican</a>.
+    <a href="http://creativecommons.org/publicdomain/zero/1.0?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC0 1.0<img style="height:14px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img style="height:14px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/zero.svg?ref=chooser-v1"></a>
+    </p>
+    </footer>
+</html>

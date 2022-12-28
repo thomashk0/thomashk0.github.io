@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <title>Some Inkscape Tips</title>
+        <link rel="stylesheet" href="https://thomashk0.github.io/theme/css/main.css" type="text/css" />
+<link rel="stylesheet" href="https://thomashk0.github.io/theme/css/syntax.css" type="text/css" />    </head>
+
+    <header id="site-header">
+        <nav id="side-nav">
+            <div id="site-header" class="container">
+                <span id="site-name">Thomashk0.Blog</span>
+                <div class="links">
+                    / <a href="https://thomashk0.github.io/index.html">Home</a> /
+                    <a href="https://thomashk0.github.io/pages/about.html">About</a> /
+                    <a href="https://thomashk0.github.io/pages/contact.html">Contact</a> /
+                </div>
+                <div class="rss">
+                    <a href="https://thomashk0.github.io/feeds/all.atom.xml">RSS</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <body>
+        <div class="container">
+<div class="row">
+     <div class="col-md-8">
+           <h1>Some Inkscape Tips</h1>
+             <label>Posted on <strong>2022/11/30</strong></label>
+               <p>As a researcher, having some basic knowledge of a vector drawing tool is very helpful.
+<a class="reference external" href="https://inkscape.org/">Inkscape</a> is an incredible open-source project, which among others allows creating and editing SVG files.</p>
+<p>Because <a class="reference external" href="https://inkscape.org/">Inkscape</a> is very generic and not tuned for creating specific diagrams, it can take some efforts.
+The first drawings (including mines at the time) usually look, well, &quot;artistic&quot; lets say.
+So, those days, many people will perfer more friendly tools like <a class="reference external" href="https://app.diagrams.net/">draw.io</a>, which generate clean generate with little efforts.</p>
+<p>The learing curve of <a class="reference external" href="https://inkscape.org/">Inkscape</a> is steep, but I would argue that it us worth investing time in it.
+With a bit of practice you can basically produce any kind of diagram (more that enough for scientific papers).
+In this post I show some tip to improve the <a class="reference external" href="https://inkscape.org/">Inkscape</a> experience.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This goal of this post is not to convince you to switch to <a class="reference external" href="https://inkscape.org/">Inkscape</a> . I
+do not like <a class="reference external" href="https://app.diagrams.net/">draw.io</a> for several reasons. But I strongly belive that
+the useful tools are the one you masters.</p>
+</div>
+<div class="section" id="basic-configuration">
+<h2>Basic Configuration</h2>
+<p>When you want to draw properly aligned elements, I find the grid mandatory.
+You want to do two things:</p>
+<ul class="simple">
+<li>Display the grid (Press &quot;#&quot; for switching it on/off). You can customize the grid, I usally don't find it useful.</li>
+<li>Enable snapping (Press &quot;%&quot; for switching it on/off), so that items like boxes will automatically snap to the grid.</li>
+</ul>
+<p>This way, you can ensure consistent spacing of items.</p>
+</div>
+<div class="section" id="conversion">
+<h2>Conversion</h2>
+<p>For converting SVG to other formats, I usually export the drawing region.
+This requires you to properly resize the document to your drawing area.</p>
+<p>Export to PDF:</p>
+<div class="highlight"><pre><span></span><span class="gp">$ </span>inkscape --export-text-to-path -D -o output.pdf input.svg
+</pre></div>
+<p>The <tt class="docutils literal"><span class="pre">--export-text-to-path</span></tt> option is very important. As suggested, it
+transforms text to paths. Otherwise, text is rendered by the PDF rendering
+engine and font may be missing. By passing this flag, you will have a
+consistent rendering of your drawing.</p>
+<p>Export to PNG:</p>
+<div class="highlight"><pre><span></span><span class="gp">$ </span>inkscape -D -d <span class="m">300</span> -o output.png input.svg
+</pre></div>
+<p>Here, the DPI parameter is set <tt class="docutils literal">300</tt>.</p>
+<p>With Release 1.0, the Inkscape command line changed. Here are the versions
+of those commands for older Inkscape.</p>
+<div class="highlight"><pre><span></span><span class="gp">$ </span>inkscape --export-text-to-path -D -A output.pdf input.svg
+<span class="gp">$ </span>inkscape -D -d <span class="m">300</span> -e output.png input.svg
+</pre></div>
+</div>
+<div class="section" id="makefile-receipe">
+<h2>Makefile Receipe</h2>
+<div class="highlight"><pre><span></span><span class="nv">INKSCAPE</span> <span class="o">?=</span> inkscape
+<span class="nv">INKSCAPE_FLAGS</span> <span class="o">?=</span>
+<span class="nv">INKSCAPE_FLAGS</span> <span class="o">+=</span> --export-text-to-path
+<span class="nv">INKSCAPE_VERSION_1</span> <span class="o">:=</span> <span class="k">$(</span>shell inkscape --version <span class="p">|</span> grep -o -E <span class="s1">&#39;Inkscape 1\.[0-9]+&#39;</span><span class="k">)</span>
+
+<span class="nf">figs/%.pdf</span><span class="o">:</span> <span class="n">figs</span>/<span class="n">svg</span>/%.<span class="n">svg</span>
+<span class="cp">ifeq ($(INKSCAPE_VERSION_1),) # Inkscape &lt; 1.0</span>
+    <span class="k">$(</span>INKSCAPE<span class="k">)</span> <span class="k">$(</span>INKSCAPE_FLAGS<span class="k">)</span> -D -A <span class="nv">$@</span> $&lt;
+<span class="cp">else</span>
+    <span class="k">$(</span>INKSCAPE<span class="k">)</span> <span class="k">$(</span>INKSCAPE_FLAGS<span class="k">)</span> -D -o <span class="nv">$@</span> $&lt;
+<span class="cp">endif</span>
+
+<span class="nf">figs/%.png</span><span class="o">:</span> <span class="n">figs</span>/<span class="n">svg</span>/%.<span class="n">svg</span>
+<span class="cp">ifeq ($(INKSCAPE_VERSION_1),) # Inkscape &lt; 1.0</span>
+    <span class="k">$(</span>INKSCAPE<span class="k">)</span> <span class="k">$(</span>INKSCAPE_FLAGS<span class="k">)</span> -D -d <span class="m">300</span> -e <span class="nv">$@</span> $&lt;
+<span class="cp">else</span>
+    <span class="k">$(</span>INKSCAPE<span class="k">)</span> <span class="k">$(</span>INKSCAPE_FLAGS<span class="k">)</span> -D -d <span class="m">300</span> -o <span class="nv">$@</span> $&lt;
+<span class="cp">endif</span>
+</pre></div>
+</div>
+<div class="section" id="hidding-layers-for-simple-animations">
+<h2>Hidding Layers for Simple Animations</h2>
+</div>
+
+    </div>
+</div>
+        </div>
+    </body>
+    <footer id="site-footer" class="container">
+
+    <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/">
+    ---
+    Made with &lt;3 using <a href="https://docs.getpelican.com/en/latest/index.html">Pelican</a>.
+    <a href="http://creativecommons.org/publicdomain/zero/1.0?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC0 1.0<img style="height:14px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img style="height:14px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/zero.svg?ref=chooser-v1"></a>
+    </p>
+    </footer>
+</html>
