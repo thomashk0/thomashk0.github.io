@@ -4,35 +4,6 @@ function degreeToRadian(x) {
     return x * Math.PI / 180;
 }
 
-const width = 300;
-const height = 200;
-const margin = { top: 5, bottom: 5, left: 5, right: 5 };
-
-const svg = d3.select("#svg-canvas")
-    .append('svg')
-    .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox", `0 0 ${width} ${height}`)
-    .style('border', '1px dotted #999');
-
-const hMid = height / 2;
-const wMid = width / 2;
-const center = [wMid, hMid];
-
-const hLine =
-    svg.append("path")
-        .attr("stroke", "black")
-        .attr("d", d3.line()([[margin.left, hMid], [width - margin.right, hMid]]));
-const vLine =
-    svg.append("path")
-        .attr("stroke", "grey")
-        .attr("stroke-dasharray", "5,5")
-        .attr("d", d3.line()([[wMid, margin.top], [wMid, height - margin.bottom]]));
-
-const rayIn = svg.append("path").attr("id", "ray-in");
-const rayOut = svg.append("path").attr("id", "ray-out");
-
-const docAngle = document.getElementById("angle");
-
 function vNorm(v) {
     return Math.sqrt(v[0] * v[0] + v[1] * v[1]);
 }
@@ -70,6 +41,39 @@ function refract(ri, normal, mu) {
     return vAdd(normalComp, riComp);
 }
 
+const width = 300;
+const height = 200;
+const margin = { top: 5, bottom: 5, left: 5, right: 5 };
+
+const svg = d3.select("#svg-canvas")
+    .append('svg')
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .style('border', '1px dotted #999');
+
+const hMid = height / 2;
+const wMid = width / 2;
+const center = [wMid, hMid];
+
+const hLine =
+    svg.append("path")
+        .attr("stroke", "black")
+        .attr("d", d3.line()([[margin.left, hMid], [width - margin.right, hMid]]));
+const vLine =
+    svg.append("path")
+        .attr("stroke", "grey")
+        .attr("stroke-dasharray", "5,5")
+        .attr("d", d3.line()([[wMid, margin.top], [wMid, height - margin.bottom]]));
+const angleGrp = svg.append('g').attr("transform", `translate(${wMid}, ${hMid})`);
+const angleIn = angleGrp.append("path").attr("id", "angle-in");
+
+
+const rayIn = svg.append("path").attr("id", "ray-in");
+const rayOut = svg.append("path").attr("id", "ray-out");
+
+const docAngle = document.getElementById("angle");
+
+
 function drawRays(ni, nr) {
     console.log(`drawRays with ni=${ni}, nr=${nr}`)
     const norm = 100;
@@ -80,6 +84,16 @@ function drawRays(ni, nr) {
     rayIn
         .attr("stroke", "red")
         .attr("d", d3.line()([rayInSrc, center]));
+    const arcIn = d3.arc()
+        .innerRadius(0)
+        .outerRadius(30)
+        .startAngle(-alpha)
+        .endAngle(0);
+    angleIn
+        .attr("d", arcIn)
+        .attr("fill", "pink")
+        .attr("stroke", "gray")
+        .attr("stroke-width", 1);
 
     const normal = [0, -1]
     const rayOutDir = refract(rayInDir, normal, ni / nr);
@@ -112,3 +126,9 @@ document.getElementById("angle")
         angle.innerHTML = `${angleValue.toFixed(2)} &#176;`;
         update()
     });
+docNi.addEventListener("change", () => {
+    update();
+});
+docNr.addEventListener("change", () => {
+    update();
+});
