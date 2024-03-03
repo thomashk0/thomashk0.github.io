@@ -4,21 +4,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <head>
         <title>Ray Tracing and Refraction</title>
-        <link rel="stylesheet" href="https://thomashk0.github.io/theme/css/main.css" type="text/css" />
-                <link rel="stylesheet" href="https://thomashk0.github.io/css/refraction.css" type="text/css" />
-<link rel="stylesheet" href="https://thomashk0.github.io/theme/css/syntax.css" type="text/css" />    </head>
+        <link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+                <link rel="stylesheet" href="/css/refraction.css" type="text/css" />
+<link rel="stylesheet" href="/theme/css/syntax.css" type="text/css" />    </head>
 
     <header id="site-header">
         <nav id="side-nav">
             <div id="site-header" class="container">
                 <span id="site-name">Thomashk0.Blog</span>
                 <div class="links">
-                    / <a href="https://thomashk0.github.io/index.html">Home</a> /
-                    <a href="https://thomashk0.github.io/pages/about.html">About</a> /
-                    <a href="https://thomashk0.github.io/pages/contact.html">Contact</a> /
+                    / <a href="/index.html">Home</a> /
+                    <a href="/pages/about.html">About</a> /
+                    <a href="/pages/contact.html">Contact</a> /
                 </div>
                 <div class="rss">
-                    <a href="https://thomashk0.github.io/feeds/all.atom.xml">RSS</a>
+                    <a href="/feeds/all.atom.xml">RSS</a>
                 </div>
             </div>
         </nav>
@@ -75,7 +75,7 @@ the refracted ray and <span class="math">\(\vec{n}\)</span> the surface normal. 
 is: how can we express <span class="math">\(\vec{r}\)</span> in function of <span class="math">\(\vec{i}\)</span>
 and <span class="math">\(\vec{n}\)</span> and the refractive indices?</p>
 <div class="figure align-center" id="fig-refraction">
-<img alt="Typical Refraction Setup" src="https://thomashk0.github.io/static/img/raytracer_refraction.png" style="width: 65%;" />
+<img alt="Typical Refraction Setup" src="/static/img/raytracer_refraction.png" style="width: 65%;" />
 <p class="caption">Figure 1: Typical Refraction Setup</p>
 </div>
 <p>We make the following assumptions:</p>
@@ -226,13 +226,13 @@ written as:</p>
 <div class="section" id="back-to-the-code">
 <h2>Back to the Code</h2>
 <p>Now, the code shown <a class="reference external" href="https://raytracing.github.io/books/RayTracingInOneWeekend.html#dielectrics/refraction">in the book</a> should make more sense.</p>
-<div class="highlight"><pre><span></span><span class="n">vec3</span><span class="w"> </span><span class="nf">refract</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">vec3</span><span class="o">&amp;</span><span class="w"> </span><span class="n">uv</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">vec3</span><span class="o">&amp;</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">etai_over_etat</span><span class="p">)</span><span class="w"></span>
-<span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">cos_theta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fmin</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="o">-</span><span class="n">uv</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">),</span><span class="w"> </span><span class="mf">1.0</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">vec3</span><span class="w"> </span><span class="n">r_out_perp</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">etai_over_etat</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">uv</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">cos_theta</span><span class="o">*</span><span class="n">n</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">vec3</span><span class="w"> </span><span class="n">r_out_parallel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">fabs</span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">r_out_perp</span><span class="p">.</span><span class="n">length_squared</span><span class="p">()))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">r_out_perp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">r_out_parallel</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><span class="n">vec3</span><span class="w"> </span><span class="nf">refract</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">vec3</span><span class="o">&amp;</span><span class="w"> </span><span class="n">uv</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">vec3</span><span class="o">&amp;</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">etai_over_etat</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">cos_theta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fmin</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="o">-</span><span class="n">uv</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">),</span><span class="w"> </span><span class="mf">1.0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">vec3</span><span class="w"> </span><span class="n">r_out_perp</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">etai_over_etat</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">uv</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">cos_theta</span><span class="o">*</span><span class="n">n</span><span class="p">);</span>
+<span class="w">    </span><span class="n">vec3</span><span class="w"> </span><span class="n">r_out_parallel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="n">fabs</span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">r_out_perp</span><span class="p">.</span><span class="n">length_squared</span><span class="p">()))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">r_out_perp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">r_out_parallel</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 <p>Well, if you look carefully, the <tt class="docutils literal">r_out_parallel</tt> does not match with the expression of <span class="math">\(\vec{r}_{||}\)</span>.
 The author applied Pythagoras' theorem (assuming the vector returned is a unit vector).</p>
@@ -331,7 +331,7 @@ Given the quantity of boring equation, I definitely understand why the author di
         </div>
     </body>
             <script src="https://d3js.org/d3.v7.min.js"></script>
-            <script src="https://thomashk0.github.io/js/refraction_anim.js"></script>
+            <script src="/js/refraction_anim.js"></script>
     <footer id="site-footer" class="container">
 
     <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/">

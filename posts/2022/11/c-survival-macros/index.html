@@ -4,20 +4,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <head>
         <title>Survival Kit for C Programmers (Macros)</title>
-        <link rel="stylesheet" href="https://thomashk0.github.io/theme/css/main.css" type="text/css" />
-<link rel="stylesheet" href="https://thomashk0.github.io/theme/css/syntax.css" type="text/css" />    </head>
+        <link rel="stylesheet" href="/theme/css/main.css" type="text/css" />
+<link rel="stylesheet" href="/theme/css/syntax.css" type="text/css" />    </head>
 
     <header id="site-header">
         <nav id="side-nav">
             <div id="site-header" class="container">
                 <span id="site-name">Thomashk0.Blog</span>
                 <div class="links">
-                    / <a href="https://thomashk0.github.io/index.html">Home</a> /
-                    <a href="https://thomashk0.github.io/pages/about.html">About</a> /
-                    <a href="https://thomashk0.github.io/pages/contact.html">Contact</a> /
+                    / <a href="/index.html">Home</a> /
+                    <a href="/pages/about.html">About</a> /
+                    <a href="/pages/contact.html">Contact</a> /
                 </div>
                 <div class="rss">
-                    <a href="https://thomashk0.github.io/feeds/all.atom.xml">RSS</a>
+                    <a href="/feeds/all.atom.xml">RSS</a>
                 </div>
             </div>
         </nav>
@@ -45,12 +45,12 @@ The <tt class="docutils literal">COUNT_OF</tt> macro shown below solves this iss
 <span class="cp">#define COUNT_OF(x) (sizeof(x) / sizeof(x[0]))</span>
 </pre></div>
 <p>You can use it as follows:</p>
-<div class="highlight"><pre><span></span><span class="kt">double</span><span class="w"> </span><span class="n">local_array</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">};</span><span class="w"></span>
+<div class="highlight"><pre><span></span><span class="kt">double</span><span class="w"> </span><span class="n">local_array</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">};</span>
 
-<span class="n">assert</span><span class="p">(</span><span class="n">COUNT_OF</span><span class="p">(</span><span class="n">local_array</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span><span class="w"></span>
-<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">COUNT_OF</span><span class="p">(</span><span class="n">local_array</span><span class="p">);</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="n">assert</span><span class="p">(</span><span class="n">COUNT_OF</span><span class="p">(</span><span class="n">local_array</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">COUNT_OF</span><span class="p">(</span><span class="n">local_array</span><span class="p">);</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// do some stuff.</span>
-<span class="p">}</span><span class="w"></span>
+<span class="p">}</span>
 </pre></div>
 <p>If compatibility with C++ is needed, I suggest you pick a safer version of this macro (see this <a class="reference external" href="https://stackoverflow.com/a/4415646">stack overflow post</a>).</p>
 </div>
@@ -85,15 +85,15 @@ annotations. I generally use them in two situations.</p>
 mentioning that a better approach for large codebases may be to use <cite>profile guided optimizations &lt;https://en.wikipedia.org/wiki/Profile-guided_optimization&gt;</cite>.</p>
 <p>The second situation, is when I am doing error checks. I find those annotations
 conveniently document the unlikely nature of failures.</p>
-<div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">foo_can_fail</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">UNLIKELY</span><span class="p">(</span><span class="n">bar_acuda</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">UNLIKELY</span><span class="p">(</span><span class="n">bar_tabac</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">-2</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">foo_can_fail</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">UNLIKELY</span><span class="p">(</span><span class="n">bar_acuda</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">UNLIKELY</span><span class="p">(</span><span class="n">bar_tabac</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">-2</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 <p>Another macro I use very often is <tt class="docutils literal">ALIGNED</tt>, mostly to align &quot;important&quot; data
 on cache line boundaries.</p>
@@ -101,13 +101,13 @@ on cache line boundaries.</p>
 </pre></div>
 <p>You can use it as follows:</p>
 <div class="highlight"><pre><span></span><span class="c1">// In variable declaration.</span>
-<span class="k">static</span><span class="w"> </span><span class="n">ALIGNED</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">array</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span><span class="w"></span>
+<span class="k">static</span><span class="w"> </span><span class="n">ALIGNED</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">array</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span>
 
 <span class="c1">// In structure definition.</span>
-<span class="k">struct</span><span class="w"> </span><span class="nc">coords</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">     </span><span class="kt">double</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w"></span>
-<span class="w">     </span><span class="kt">double</span><span class="w"> </span><span class="n">y</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"> </span><span class="n">ALIGNED</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span><span class="w"></span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">coords</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kt">double</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="w">     </span><span class="kt">double</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="n">ALIGNED</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
 </pre></div>
 <p>Another powerful macro is <tt class="docutils literal">ASSUME</tt>, we give it predicate that the
 compiler can exploit in its optimizations phases.</p>
@@ -119,18 +119,18 @@ compiler can exploit in its optimizations phases.</p>
 </pre></div>
 <p>I typically use this macro to specify constraints on array sizes, to make loop
 optimizations (unrolling, auto-vectorization) more aggressive. For example:</p>
-<div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">add_vec</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">data_len</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">ASSUME</span><span class="p">(</span><span class="n">data_len</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">16</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">ASSUME</span><span class="p">((</span><span class="n">data_len</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">data_len</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">add_vec</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">data_len</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">ASSUME</span><span class="p">(</span><span class="n">data_len</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">16</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ASSUME</span><span class="p">((</span><span class="n">data_len</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">data_len</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 <p>Here is a side-by-side comparison of the assembly code (<tt class="docutils literal">gcc <span class="pre">-O3</span></tt>) with and
 without the <tt class="docutils literal">ASSUME</tt> annotation. It is pretty clear that the <tt class="docutils literal">ASSUME</tt> macro
 allowed to drastically simplify the loop.</p>
-<object data="https://thomashk0.github.io/static/img/c_macro_assume_example.svg" style="width: 100%;" type="image/svg+xml">Assembly code with and without the ASSUME macro.</object>
+<object data="/static/img/c_macro_assume_example.svg" style="width: 100%;" type="image/svg+xml">Assembly code with and without the ASSUME macro.</object>
 <p>But be careful with <tt class="docutils literal">ASSUME</tt>, it is very easy to shoot yourself in the foot
 with this macro!  If the assumption given to the compiler is not true, bad
 things will happen.</p>
@@ -141,36 +141,36 @@ things will happen.</p>
 <p>I like to have really simple <tt class="docutils literal">printf</tt>-based tracing in my applications
 (usually enable only in debug builds).</p>
 <p>Basically, I write a simple wrapper around <tt class="docutils literal">fprintf</tt> with the following prototype:</p>
-<div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"></span>
-<span class="nf">survival_log</span><span class="p">(</span><span class="w"></span>
-<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">level</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">file</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">func</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">line</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">fmt</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="p">...)</span><span class="w"> </span><span class="n">__attribute__</span><span class="p">((</span><span class="n">format</span><span class="p">(</span><span class="n">printf</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">)));</span><span class="w"></span>
+<div class="highlight"><pre><span></span><span class="kt">int</span>
+<span class="nf">survival_log</span><span class="p">(</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">level</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">file</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">func</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">line</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">fmt</span><span class="p">,</span>
+<span class="w">    </span><span class="p">...)</span><span class="w"> </span><span class="n">__attribute__</span><span class="p">((</span><span class="n">format</span><span class="p">(</span><span class="n">printf</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">)));</span>
 </pre></div>
 <p>A minimal implementation of this function will look something like this:</p>
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdarg.h&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdarg.h&gt;</span>
 
-<span class="kt">int</span><span class="w"></span>
-<span class="nf">survival_log</span><span class="p">(</span><span class="w"></span>
-<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">level</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">file</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">func</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">line</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">fmt</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="p">...)</span><span class="w"></span>
-<span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="kt">va_list</span><span class="w"> </span><span class="n">arglist</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">fprintf</span><span class="p">(</span><span class="w"></span>
-<span class="w">        </span><span class="n">stderr</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;[%ld](%s:%ld in %s) &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">level</span><span class="p">,</span><span class="w"> </span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="n">line</span><span class="p">,</span><span class="w"> </span><span class="n">func</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">va_start</span><span class="p">(</span><span class="n">arglist</span><span class="p">,</span><span class="w"> </span><span class="n">fmt</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">vfprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span><span class="w"> </span><span class="n">fmt</span><span class="p">,</span><span class="w"> </span><span class="n">arglist</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">va_end</span><span class="p">(</span><span class="n">arglist</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">int</span>
+<span class="nf">survival_log</span><span class="p">(</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">level</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">file</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">func</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">line</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">fmt</span><span class="p">,</span>
+<span class="w">    </span><span class="p">...)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">va_list</span><span class="w"> </span><span class="n">arglist</span><span class="p">;</span>
+<span class="w">    </span><span class="n">fprintf</span><span class="p">(</span>
+<span class="w">        </span><span class="n">stderr</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;[%ld](%s:%ld in %s) &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">level</span><span class="p">,</span><span class="w"> </span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="n">line</span><span class="p">,</span><span class="w"> </span><span class="n">func</span><span class="p">);</span>
+<span class="w">    </span><span class="n">va_start</span><span class="p">(</span><span class="n">arglist</span><span class="p">,</span><span class="w"> </span><span class="n">fmt</span><span class="p">);</span>
+<span class="w">    </span><span class="n">vfprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span><span class="w"> </span><span class="n">fmt</span><span class="p">,</span><span class="w"> </span><span class="n">arglist</span><span class="p">);</span>
+<span class="w">    </span><span class="n">va_end</span><span class="p">(</span><span class="n">arglist</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 <p>The code may look complex because of variadic arguments, but it is not.  What
 it does is: first call <tt class="docutils literal">fprintf</tt> to print a prefix (log level, file, line)
@@ -191,10 +191,10 @@ regular <tt class="docutils literal">printf</tt>. Under the hoods, they just for
 <span class="cp">    } while (0)</span>
 </pre></div>
 <p>You can use those macros as a regular <tt class="docutils literal">printf</tt>. For example:</p>
-<div class="highlight"><pre><span></span><span class="n">DPRINTF</span><span class="p">(</span><span class="s">&quot;checking LIKELY, UNLIKELY</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span><span class="w"></span>
-<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">LIKELY</span><span class="p">(</span><span class="n">rnd</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">DPRINTF</span><span class="p">(</span><span class="s">&quot;rand() is &gt; 0, (%d)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rnd</span><span class="p">);</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<div class="highlight"><pre><span></span><span class="n">DPRINTF</span><span class="p">(</span><span class="s">&quot;checking LIKELY, UNLIKELY</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">LIKELY</span><span class="p">(</span><span class="n">rnd</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">DPRINTF</span><span class="p">(</span><span class="s">&quot;rand() is &gt; 0, (%d)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rnd</span><span class="p">);</span>
+<span class="p">}</span>
 </pre></div>
 <p>Will produce the following output on <tt class="docutils literal">stderr</tt>:</p>
 <div class="highlight"><pre><span></span>[debug](survival_demo.c:90 in main) checking LIKELY, UNLIKELY
@@ -211,7 +211,7 @@ to extend if needed (e.g., display timestamps, implement filters, log to files,
 <p>When possible I like to use the <tt class="docutils literal">__cleanup__</tt> attribute available in GCC and Clang.
 This extension allows to implement automatic cleanup of variables (some sort of RAII in C).</p>
 <p>Put shortly, if a variable is marked with this attribute:</p>
-<div class="highlight"><pre><span></span><span class="n">__attribute__</span><span class="w"> </span><span class="p">((</span><span class="n">__cleanup__</span><span class="p">(</span><span class="n">int_cleanup</span><span class="p">)))</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><span class="n">__attribute__</span><span class="w"> </span><span class="p">((</span><span class="n">__cleanup__</span><span class="p">(</span><span class="n">int_cleanup</span><span class="p">)))</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
 </pre></div>
 <p>Then, the function <tt class="docutils literal">void int_cleanup(int* ptr)</tt> will be called, when variable
 <tt class="docutils literal">x</tt> goes out of scope.  The address of <tt class="docutils literal">x</tt> is passed to <tt class="docutils literal">int_cleanup</tt> as
@@ -227,13 +227,13 @@ Thus, the first thing to do is to simplify the attribute annotation:</p>
 <p>Then, I would create scoped variable with this macros:</p>
 <div class="highlight"><pre><span></span><span class="c1">// __attribute__ ((__cleanup__(int_cleanup))) int x = 42;</span>
 <span class="c1">// becomes:</span>
-<span class="n">scoped_int</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span><span class="w"></span>
+<span class="n">scoped_int</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
 </pre></div>
 <p>We could also think of a <tt class="docutils literal">scoped_int</tt> macro that would expand to <tt class="docutils literal">__attribute__ <span class="pre">((__cleanup__(int_cleanup)))</span> int</tt>.
 But I like to keep macro expansion straightforward.</p>
 <p>Another annoying aspect of the cleanup extension is in the definition of cleanup handlers.</p>
 <p>Let's say you want to automatically close a file. You would be tempted to declare your file as:</p>
-<div class="highlight"><pre><span></span><span class="n">__attribute__</span><span class="w"> </span><span class="p">((</span><span class="n">__cleanup__</span><span class="p">(</span><span class="n">fclose</span><span class="p">)))</span><span class="w"> </span><span class="kt">FILE</span><span class="o">*</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><span class="n">__attribute__</span><span class="w"> </span><span class="p">((</span><span class="n">__cleanup__</span><span class="p">(</span><span class="n">fclose</span><span class="p">)))</span><span class="w"> </span><span class="kt">FILE</span><span class="o">*</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
 </pre></div>
 <p>However, <tt class="docutils literal">fclose</tt> does not have the correct prototype, because the cleanup
 extension will pass the address of <tt class="docutils literal">f</tt> (a <tt class="docutils literal">FILE**</tt> type). To automatically
@@ -249,17 +249,17 @@ generate wrappers I use the following macro (taken from System-D codebase).</p>
 </pre></div>
 <p>With this macro, you can define a scoped file as follows:</p>
 <div class="highlight"><pre><span></span><span class="c1">// Instanciate a trivial cleanup function for FILE* types.</span>
-<span class="n">DEFINE_TRIVIAL_CLEANUP_FUNC</span><span class="p">(</span><span class="w"></span>
-<span class="w">    </span><span class="n">file_cleanup</span><span class="p">,</span><span class="w"> </span><span class="cm">/* Name for the wrapper generated. */</span><span class="w"></span>
-<span class="w">    </span><span class="kt">FILE</span><span class="o">*</span><span class="p">,</span><span class="w">        </span><span class="cm">/* Type passed to the destructor. */</span><span class="w"></span>
-<span class="w">    </span><span class="n">fclose</span><span class="w">        </span><span class="cm">/* Destructor invoked. */</span><span class="w"></span>
-<span class="p">);</span><span class="w"></span>
+<span class="n">DEFINE_TRIVIAL_CLEANUP_FUNC</span><span class="p">(</span>
+<span class="w">    </span><span class="n">file_cleanup</span><span class="p">,</span><span class="w"> </span><span class="cm">/* Name for the wrapper generated. */</span>
+<span class="w">    </span><span class="kt">FILE</span><span class="o">*</span><span class="p">,</span><span class="w">        </span><span class="cm">/* Type passed to the destructor. */</span>
+<span class="w">    </span><span class="n">fclose</span><span class="w">        </span><span class="cm">/* Destructor invoked. */</span>
+<span class="p">);</span>
 
 <span class="c1">// Attribute to declare scoped files.</span>
 <span class="cp">#define scoped_file SURVIVAL_CLEANUP(file_cleanup)</span>
 
 <span class="c1">// Example scoped file:</span>
-<span class="n">scoped_file</span><span class="w"> </span><span class="kt">FILE</span><span class="o">*</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fopen</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="n">scoped_file</span><span class="w"> </span><span class="kt">FILE</span><span class="o">*</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fopen</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 <div class="section" id="conclusion">
