@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomashk0's web pages - programming</title><link href="/" rel="alternate"></link><link href="/feeds/programming.atom.xml" rel="self"></link><id>/</id><updated>2022-11-30T00:00:00+01:00</updated><entry><title>Survival Kit for C Programmers (Macros)</title><link href="/posts/2022/11/c-survival-macros/" rel="alternate"></link><published>2022-11-24T00:00:00+01:00</published><updated>2022-11-30T00:00:00+01:00</updated><author><name>Thomas Hiscock</name></author><id>tag:None,2022-11-24:/posts/2022/11/c-survival-macros/</id><summary type="html">&lt;p&gt;I realized that in my C projects I always need the same macros over and over.
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomashk0's web pages - programming</title><link href="https://thomashk0.github.io/" rel="alternate"></link><link href="https://thomashk0.github.io/feeds/programming.atom.xml" rel="self"></link><id>https://thomashk0.github.io/</id><updated>2022-11-30T00:00:00+01:00</updated><entry><title>Survival Kit for C Programmers (Macros)</title><link href="https://thomashk0.github.io/posts/2022/11/c-survival-macros/" rel="alternate"></link><published>2022-11-24T00:00:00+01:00</published><updated>2022-11-30T00:00:00+01:00</updated><author><name>Thomas Hiscock</name></author><id>tag:thomashk0.github.io,2022-11-24:/posts/2022/11/c-survival-macros/</id><summary type="html">&lt;p&gt;I realized that in my C projects I always need the same macros over and over.
 I thought it would be interesting to centralize them somewhere and document them.&lt;/p&gt;
 &lt;p&gt;The macros presented here should work with any recent GCC or LLVM compiler.
 I do not guarantee they will work on …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I realized that in my C projects I always need the same macros over and over.
@@ -103,7 +103,7 @@ optimizations (unrolling, auto-vectorization) more aggressive. For example:&lt;/
 &lt;p&gt;Here is a side-by-side comparison of the assembly code (&lt;tt class="docutils literal"&gt;gcc &lt;span class="pre"&gt;-O3&lt;/span&gt;&lt;/tt&gt;) with and
 without the &lt;tt class="docutils literal"&gt;ASSUME&lt;/tt&gt; annotation. It is pretty clear that the &lt;tt class="docutils literal"&gt;ASSUME&lt;/tt&gt; macro
 allowed to drastically simplify the loop.&lt;/p&gt;
-&lt;object data="/static/img/c_macro_assume_example.svg" style="width: 100%;" type="image/svg+xml"&gt;Assembly code with and without the ASSUME macro.&lt;/object&gt;
+&lt;object data="https://thomashk0.github.io/static/img/c_macro_assume_example.svg" style="width: 100%;" type="image/svg+xml"&gt;Assembly code with and without the ASSUME macro.&lt;/object&gt;
 &lt;p&gt;But be careful with &lt;tt class="docutils literal"&gt;ASSUME&lt;/tt&gt;, it is very easy to shoot yourself in the foot
 with this macro!  If the assumption given to the compiler is not true, bad
 things will happen.&lt;/p&gt;
