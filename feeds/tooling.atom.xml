@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomashk0's web pages - tooling</title><link href="https://thomashk0.github.io/" rel="alternate"></link><link href="https://thomashk0.github.io/feeds/tooling.atom.xml" rel="self"></link><id>https://thomashk0.github.io/</id><updated>2024-08-25T00:00:00+02:00</updated><entry><title>Some Inkscape Tips</title><link href="https://thomashk0.github.io/posts/2024/08/inkscape-tips/" rel="alternate"></link><published>2024-08-25T00:00:00+02:00</published><updated>2024-08-25T00:00:00+02:00</updated><author><name>Thomas Hiscock</name></author><id>tag:thomashk0.github.io,2024-08-25:/posts/2024/08/inkscape-tips/</id><summary type="html">&lt;p&gt;As a researcher, having some basic knowledge of a vector graphic tool is a valuable skill.
+Among the variety of options, &lt;a class="reference external" href="https://inkscape.org/"&gt;Inkscape&lt;/a&gt; is a nice open-source project for creating and editing SVG files.&lt;/p&gt;
+&lt;p&gt;This tool is quite powerful, you can do almost any sort of 2-D vector drawing with it …&lt;/p&gt;</summary><content type="html">&lt;p&gt;As a researcher, having some basic knowledge of a vector graphic tool is a valuable skill.
+Among the variety of options, &lt;a class="reference external" href="https://inkscape.org/"&gt;Inkscape&lt;/a&gt; is a nice open-source project for creating and editing SVG files.&lt;/p&gt;
+&lt;p&gt;This tool is quite powerful, you can do almost any sort of 2-D vector drawing with it.
+Such flexibility comes with a cost: there is a steep learning curve for the tool and it can take some efforts to make simple things.&lt;/p&gt;
+&lt;p&gt;Is it worth investing time in learning &lt;a class="reference external" href="https://inkscape.org/"&gt;Inkscape&lt;/a&gt;? To be honest, I don't know.
+If you need a quick solution to make drawings, you will probably get the job
+done faster with things like &lt;a class="reference external" href="https://app.diagrams.net/"&gt;draw.io&lt;/a&gt;,
+&lt;a class="reference external" href="https://excalidraw.com"&gt;excalidraw&lt;/a&gt;, or others.&lt;/p&gt;
+&lt;p&gt;I learned &lt;a class="reference external" href="https://inkscape.org/"&gt;Inkscape&lt;/a&gt; because it was the best open-source option at the time I
+started my career.  But I do not regret it. I like to have an offline
+open-source solution for my drawings that is git-friendly. With a bit of
+practice, you can produce any kind of diagrams (more that enough for scientific
+papers). You will also not be afraid to edit SVG files when needed (e.g.,
+stripping a you-don't-know-why-it-is-there margin from matplotlib to make your
+paper fit the page limit, 5 minutes before a deadline).&lt;/p&gt;
+&lt;p&gt;In this post, I show some tip to improve the &lt;a class="reference external" href="https://inkscape.org/"&gt;Inkscape&lt;/a&gt; experience.&lt;/p&gt;
+&lt;div class="section" id="basic-configuration"&gt;
+&lt;h2&gt;Basic Configuration&lt;/h2&gt;
+&lt;p&gt;For scientific papers, some sort of alignment is always welcome in your
+illustrations! If find that &lt;strong&gt;using a grid is mandatory&lt;/strong&gt;.
+You want to do two things:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Display the grid (Press &amp;quot;#&amp;quot; for switching it on/off). Note that you can
+customize the grid size. There are two grids, primary and secondary. It can
+be useful to change the spacing and colors in some situations.&lt;/li&gt;
+&lt;li&gt;Enable snapping (Press &amp;quot;%&amp;quot; for switching it on/off), so that items like
+boxes or text will automatically snap to the grid. You can customize how
+snapping behaves: I find it easier to snap to borders of elements. You want
+to enable snapping for all items (boxes, text, paths).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This way, you can ensure consistent spacing of items.&lt;/p&gt;
+&lt;div class="figure align-center" id="fig-inkscape-snaping"&gt;
+&lt;img alt="Screenshot showing inkscape configuration with grid" src="https://thomashk0.github.io/static/img/screenshot_inkscape_snapping.png" style="width: 80%;" /&gt;
+&lt;p class="caption"&gt;Screenshot showing the grid configuration. Aligning items with snapping is
+so satisfying :)&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="use-automatic-alignment"&gt;
+&lt;h2&gt;Use Automatic Alignment&lt;/h2&gt;
+&lt;p&gt;Inkscape has automatic alignment, this feature can save you many clicks! I tend
+to draw everything and align everything at the end.&lt;/p&gt;
+&lt;p&gt;Press &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;CTRL-ALT-A&lt;/span&gt;&lt;/tt&gt; to open the alignment pane, then you can select items and
+align them in different ways.&lt;/p&gt;
+&lt;p&gt;The important thing to remember here is that alignment is done on the first
+item of the selection.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="copy-style"&gt;
+&lt;h2&gt;Copy style&lt;/h2&gt;
+&lt;p&gt;You do not want to manually replicate style of items.&lt;/p&gt;
+&lt;p&gt;Once you styled an item (box or whatever), you can copy it with &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;CTRL-C&lt;/span&gt;&lt;/tt&gt;,
+then you can select a bunch of other items and press &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;CTRL-SHIFT-V&lt;/span&gt;&lt;/tt&gt;, this
+will apply the style of the first item to your selection.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="conversion"&gt;
+&lt;span id="sec-conversion"&gt;&lt;/span&gt;&lt;h2&gt;Conversion&lt;/h2&gt;
+&lt;p&gt;For converting SVG to other formats, I usually export the drawing region.
+This requires you to properly resize the document to your drawing area.
+The Inkscape command is quite handly and has tons of options for exporting
+&lt;cite&gt;.svg&lt;/cite&gt; files.&lt;/p&gt;
+&lt;p&gt;Export to PDF:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;inkscape&lt;span class="w"&gt; &lt;/span&gt;--export-text-to-path&lt;span class="w"&gt; &lt;/span&gt;-D&lt;span class="w"&gt; &lt;/span&gt;-o&lt;span class="w"&gt; &lt;/span&gt;output.pdf&lt;span class="w"&gt; &lt;/span&gt;input.svg
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;--export-text-to-path&lt;/span&gt;&lt;/tt&gt; option is very important. As suggested, it
+transforms text to paths. Otherwise, text is rendered by the PDF rendering
+engine and fonts may be missing. By passing this flag, you will have a
+consistent rendering of your drawings.&lt;/p&gt;
+&lt;p&gt;Export to PNG:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;inkscape&lt;span class="w"&gt; &lt;/span&gt;-D&lt;span class="w"&gt; &lt;/span&gt;-d&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;300&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-o&lt;span class="w"&gt; &lt;/span&gt;output.png&lt;span class="w"&gt; &lt;/span&gt;input.svg
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here, the DPI parameter is set &lt;tt class="docutils literal"&gt;300&lt;/tt&gt;.&lt;/p&gt;
+&lt;p&gt;With release 1.0, the Inkscape command line changed. Here are the versions
+of those commands for older Inkscape:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;inkscape&lt;span class="w"&gt; &lt;/span&gt;--export-text-to-path&lt;span class="w"&gt; &lt;/span&gt;-D&lt;span class="w"&gt; &lt;/span&gt;-A&lt;span class="w"&gt; &lt;/span&gt;output.pdf&lt;span class="w"&gt; &lt;/span&gt;input.svg
+&lt;span class="gp"&gt;$ &lt;/span&gt;inkscape&lt;span class="w"&gt; &lt;/span&gt;-D&lt;span class="w"&gt; &lt;/span&gt;-d&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;300&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-e&lt;span class="w"&gt; &lt;/span&gt;output.png&lt;span class="w"&gt; &lt;/span&gt;input.svg
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="makefile-snippet"&gt;
+&lt;h2&gt;Makefile Snippet&lt;/h2&gt;
+&lt;p&gt;A big selling point for &lt;a class="reference external" href="https://inkscape.org/"&gt;Inkscape&lt;/a&gt; is that you can save your &lt;tt class="docutils literal"&gt;.svg&lt;/tt&gt; files
+inside a git repository and generate exports at build-time using the commands
+shown in the &lt;a class="reference external" href="#sec-conversion"&gt;previous section&lt;/a&gt;. This is super convenient
+for scientific papers.&lt;/p&gt;
+&lt;div class="admonition note"&gt;
+&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
+&lt;p&gt;Once you generate a final version of your paper, I highly recommend saving
+the figures in some way (I usually add them to git). Inkscape updates can
+change the rendering. This happened to me several time: the layout of your
+paper is completely broken because the images generated are not exactly the
+same (e.g., extra margin).&lt;/p&gt;
+&lt;p class="last"&gt;Then, if you want to be 100% reproducible, snapshot your exported figures!&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;Here is a snippet that you can integrate in your makefile to automatically build figures.&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;.svg&lt;/tt&gt; source files are assumed to be in directory &lt;tt class="docutils literal"&gt;figs/svg/&lt;/tt&gt;.&lt;/li&gt;
+&lt;li&gt;Type &lt;tt class="docutils literal"&gt;make figs/name_of_fig.pdf&lt;/tt&gt; to compile &lt;tt class="docutils literal"&gt;name_of_fig.pdf&lt;/tt&gt; into PDF.&lt;/li&gt;
+&lt;li&gt;Type &lt;tt class="docutils literal"&gt;make figs/name_of_fig.png&lt;/tt&gt; to compile &lt;tt class="docutils literal"&gt;name_of_fig.png&lt;/tt&gt; into PNG.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;INKSCAPE&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;?=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;inkscape
+&lt;span class="nv"&gt;INKSCAPE_FLAGS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;?=&lt;/span&gt;
+&lt;span class="nv"&gt;INKSCAPE_FLAGS&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;+=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--export-text-to-path
+&lt;span class="nv"&gt;INKSCAPE_VERSION_1&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;shell&lt;span class="w"&gt; &lt;/span&gt;inkscape&lt;span class="w"&gt; &lt;/span&gt;--version&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;|&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;grep&lt;span class="w"&gt; &lt;/span&gt;-o&lt;span class="w"&gt; &lt;/span&gt;-E&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Inkscape 1\.[0-9]+&amp;#39;&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;
+
+&lt;span class="nf"&gt;figs/%.pdf&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;figs&lt;/span&gt;/&lt;span class="n"&gt;svg&lt;/span&gt;/%.&lt;span class="n"&gt;svg&lt;/span&gt;
+&lt;span class="cp"&gt;ifeq ($(INKSCAPE_VERSION_1),) # Inkscape &amp;lt; 1.0&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;INKSCAPE&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;INKSCAPE_FLAGS&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-D&lt;span class="w"&gt; &lt;/span&gt;-A&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;$@&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;$&amp;lt;
+&lt;span class="cp"&gt;else&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;INKSCAPE&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;INKSCAPE_FLAGS&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-D&lt;span class="w"&gt; &lt;/span&gt;-o&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;$@&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;$&amp;lt;
+&lt;span class="cp"&gt;endif&lt;/span&gt;
+
+&lt;span class="nf"&gt;figs/%.png&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;figs&lt;/span&gt;/&lt;span class="n"&gt;svg&lt;/span&gt;/%.&lt;span class="n"&gt;svg&lt;/span&gt;
+&lt;span class="cp"&gt;ifeq ($(INKSCAPE_VERSION_1),) # Inkscape &amp;lt; 1.0&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;INKSCAPE&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;INKSCAPE_FLAGS&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-D&lt;span class="w"&gt; &lt;/span&gt;-d&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;300&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-e&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;$@&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;$&amp;lt;
+&lt;span class="cp"&gt;else&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;INKSCAPE&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;INKSCAPE_FLAGS&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-D&lt;span class="w"&gt; &lt;/span&gt;-d&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;300&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;-o&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;$@&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;$&amp;lt;
+&lt;span class="cp"&gt;endif&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="hiding-layers-for-simple-animations"&gt;
+&lt;h2&gt;Hiding Layers for Simple Animations&lt;/h2&gt;
+&lt;p&gt;You can organize your &lt;cite&gt;.svg&lt;/cite&gt; file into multiple layer.&lt;/p&gt;
+&lt;p&gt;Sometimes, it can be nice to export only some selected layers.
+Imagine a file having some background image and some layers containing arrows and text annotations.
+By exporting a subset of layers, it is possible to create an animation that you can include in a slide deck for example.&lt;/p&gt;
+&lt;p&gt;I have a small script &lt;a class="reference external" href="https://github.com/thomashk0/blog/tree/main/inkscape-export-layers"&gt;here&lt;/a&gt; (~100 lines of Python, without any external dependency) that I use all the time.&lt;/p&gt;
+&lt;p&gt;Hiding some layers is as simple as:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="go"&gt;./exportlayers --hide text_layer_1,text_layer_2 -o fig_background_only.pdf fig.svg&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="making-you-diagram-draw-io-ish"&gt;
+&lt;h2&gt;Making you diagram &lt;tt class="docutils literal"&gt;draw.io&lt;/tt&gt;-ish&lt;/h2&gt;
+&lt;p&gt;If you are afraid that your diagrams will not look as cool as those of your friends made with &lt;tt class="docutils literal"&gt;draw.io&lt;/tt&gt;,
+here are a few tips to mimic the draw.io style:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Enable rounding of borders in &amp;quot;Stroke style&amp;quot;, even add a small radius to the corner of boxes.&lt;/li&gt;
+&lt;li&gt;Make your borders the same colors of the boxes, but make them slightly darker:
+show colors in HSL, and reduce the lightness (L).&lt;/li&gt;
+&lt;li&gt;Pick a &amp;quot;good-looking&amp;quot; color palette on google and stick to it for your project.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="figure align-center"&gt;
+&lt;img alt="Screenshot showing a styled diagram" src="https://thomashk0.github.io/static/img/screenshot_inkscape_drawio.png" style="width: 80%;" /&gt;
+&lt;p class="caption"&gt;Restyling of the diagram shown in &lt;a class="reference external" href="#fig-inkscape-snaping"&gt;previous section&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content><category term="tooling"></category><category term="tooling"></category></entry></feed>

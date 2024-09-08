@@ -55,7 +55,7 @@ compiler the expected outcome of a boolean expression.&lt;/p&gt;
 annotations. I generally use them in two situations.&lt;/p&gt;
 &lt;p&gt;The first situation is in performance critical code, where I want to suggest
 &amp;quot;really hard&amp;quot; to the compiler what is the hot path in our program. It is worth
-mentioning that a better approach for large codebases may be to use &lt;cite&gt;profile guided optimizations &amp;lt;https://en.wikipedia.org/wiki/Profile-guided_optimization&amp;gt;&lt;/cite&gt;.&lt;/p&gt;
+mentioning that a better approach for large codebases may be to use &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Profile-guided_optimization"&gt;profile guided optimizations&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;The second situation, is when I am doing error checks. I find those annotations
 conveniently document the unlikely nature of failures.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;foo_can_fail&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
